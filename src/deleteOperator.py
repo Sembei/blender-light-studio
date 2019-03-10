@@ -2,13 +2,13 @@ import bpy
 from bpy.props import BoolProperty
 from . common import findLightGrp
 
-class DeleteOperator(bpy.types.Operator):
+class BLS_OT_DeleteOperator(bpy.types.Operator):
     """ Custom delete """
     bl_idname = "object.delete_custom" 
     bl_label = "Custom Delete"
     bl_options = {'REGISTER', 'UNDO'}
 
-    use_global = BoolProperty(default = False)
+    use_global : BoolProperty(default = False)
 
     @classmethod
     def poll(cls, context):
@@ -39,17 +39,17 @@ def add_shortkeys():
     wm = bpy.context.window_manager
     addon_km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
     
-    addon_kmi = addon_km.keymap_items.new(DeleteOperator.bl_idname, 'X', 'PRESS')
+    addon_kmi = addon_km.keymap_items.new(BLS_OT_DeleteOperator.bl_idname, 'X', 'PRESS')
     addon_kmi.properties.use_global = False
     
-    addon_kmi = addon_km.keymap_items.new(DeleteOperator.bl_idname, 'X', 'PRESS')
+    addon_kmi = addon_km.keymap_items.new(BLS_OT_DeleteOperator.bl_idname, 'X', 'PRESS')
     addon_kmi.shift = True
     addon_kmi.properties.use_global = True
     
-    addon_kmi = addon_km.keymap_items.new(DeleteOperator.bl_idname, 'DEL', 'PRESS')
+    addon_kmi = addon_km.keymap_items.new(BLS_OT_DeleteOperator.bl_idname, 'DEL', 'PRESS')
     addon_kmi.properties.use_global = False
     
-    addon_kmi = addon_km.keymap_items.new(DeleteOperator.bl_idname, 'DEL', 'PRESS')
+    addon_kmi = addon_km.keymap_items.new(BLS_OT_DeleteOperator.bl_idname, 'DEL', 'PRESS')
     addon_kmi.shift = True
     addon_kmi.properties.use_global = True
     

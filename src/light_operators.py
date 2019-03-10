@@ -7,14 +7,14 @@ import os
 
 _ = os.sep
 
-from extensions_framework import util as efutil
+# from extensions_framework import util as efutil
 from . import bl_info
 
 def update_selection_override():
     from . selectOperator import addon_keymaps
     keylen = bool(len(addon_keymaps))
-    
-    selection_override = bpy.bls_selection_override_right if bpy.context.user_preferences.inputs.select_mouse == 'RIGHT' else bpy.bls_selection_override_left
+    selection_override = True
+    # selection_override = bpy.bls_selection_override_right if bpy.context.user_preferences.inputs.select_mouse == 'RIGHT' else bpy.bls_selection_override_left
     if keylen != selection_override:
         from . selectOperator import add_shortkeys, remove_shortkeys
         if selection_override:
@@ -24,7 +24,7 @@ def update_selection_override():
     return selection_override
     
 class Blender_Light_Studio_Properties(bpy.types.PropertyGroup):
-    initialized = BoolProperty(default = False)
+    initialized : BoolProperty(default = False)
             
     def get_light_hidden(self):
         return getLightMesh().hide_render
@@ -36,7 +36,7 @@ class Blender_Light_Studio_Properties(bpy.types.PropertyGroup):
         bpy.context.scene.frame_current = bpy.context.scene.frame_current # refresh hack
         refreshMaterials()
     
-    light_muted = BoolProperty(name="Mute Light", default=False, set=set_light_hidden, get=get_light_hidden)
+    light_muted : BoolProperty(name="Mute Light", default=False, set=set_light_hidden, get=get_light_hidden)
     
     def get_selection_overriden(self):
         if not (hasattr(bpy, 'bls_selection_override_left') and hasattr(bpy, 'bls_selection_override_right')):
@@ -52,7 +52,7 @@ class Blender_Light_Studio_Properties(bpy.types.PropertyGroup):
         else:
             remove_shortkeys()
         
-        if bpy.context.user_preferences.inputs.select_mouse == 'RIGHT':
+        if bpy.context.preferences.inputs.select_mouse == 'RIGHT':
             bpy.bls_selection_override_right = context
             efutil.write_config_value(bl_info['name'], 'defaults', 'selection_override_right', context)
         else:
@@ -60,7 +60,7 @@ class Blender_Light_Studio_Properties(bpy.types.PropertyGroup):
             efutil.write_config_value(bl_info['name'], 'defaults', 'selection_override_left', context)
         
             
-    selection_overriden = BoolProperty(
+    selection_overriden : BoolProperty(
         name="Override Selection",
         default = True,
         set=set_selection_overriden,
@@ -69,12 +69,12 @@ class Blender_Light_Studio_Properties(bpy.types.PropertyGroup):
     
     
     ''' Profile List '''
-    profile_list = CollectionProperty(type = ListItem)
-    list_index = IntProperty(name = "Index for profile_list", default = 0, update=update_list_index)
-    last_empty = StringProperty(name="Name of last Empty holding profile", default="")
+    profile_list : CollectionProperty(type = ListItem)
+    list_index : IntProperty(name = "Index for profile_list", default = 0, update=update_list_index)
+    last_empty : StringProperty(name="Name of last Empty holding profile", default="")
     
 
-class CreateBlenderLightStudio(bpy.types.Operator):
+class Create_OT_BlenderLightStudio(bpy.types.Operator):
     bl_idname = "scene.create_blender_light_studio"
     bl_label = "Create Light Studio"
     bl_description = "Append Blender Light Studio to current scene"
@@ -147,7 +147,7 @@ class DeleteBlenderLightStudio(bpy.types.Operator):
         col.label(text="Deleting Studio is irreversible!")
         col.label(text="Your lighting setup will be lost.")
 
-class AddBSLight(bpy.types.Operator):
+class Add_OT_BSLight(bpy.types.Operator):
     bl_idname = "scene.add_blender_studio_light"
     bl_label = "Add Studio Light"
     bl_description = "Add Light to Studio"
@@ -308,7 +308,7 @@ class AddBSLight(bpy.types.Operator):
                 
         return {"FINISHED"}
     
-class DeleteBSLight(bpy.types.Operator):
+class Delete_OT_BSLight(bpy.types.Operator):
     bl_idname = "scene.delete_blender_studio_light"
     bl_label = "Delete BLS Light"
     bl_description = "Delete selected Light from Studio"
@@ -370,7 +370,7 @@ class DeleteBSLight(bpy.types.Operator):
         col = layout.column(align=True)
         col.label(text="OK?")
     
-class PrepareBSLV3D(bpy.types.Operator):
+class Prepare_OT_BSLV3D(bpy.types.Operator):
     bl_idname = "scene.prepare_blender_studio_light"
     bl_label = "Prepare Layout"
     bl_description = "Split current Viewport for easier Studio usage."
@@ -434,4 +434,12 @@ class BSL_ShowAllLights(bpy.types.Operator):
         refreshMaterials()
     
         return {"FINISHED"}
-        
+classes = (
+    Create_OT_BlenderLightStudio,
+    DeleteBlenderLightStudio,
+    Add_OT_BSLight,
+    Delete_OT_BSLight,
+    Prepare_OT_BSLV3D,
+    BSL_MuteOtherLights,
+    BSL_ShowAllLights)
+register, unregister = bpy.utils.register_classes_factory(classes)

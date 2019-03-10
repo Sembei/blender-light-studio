@@ -11,11 +11,11 @@ class ListItem(bpy.types.PropertyGroup):
     def update_name(self, context):
         print("{} : {}".format(repr(self.name), repr(context)))
                 
-    name = StringProperty(
+    name : StringProperty(
             name="Profile Name",
             default="Untitled")
 
-    empty_name = StringProperty(
+    empty_name : StringProperty(
             name="Name of Empty holding profile",
             description="",
             default="")
@@ -40,7 +40,7 @@ class LIST_OT_NewItem(bpy.types.Operator):
     bl_label = "Add a new Profile"
     bl_options = {"INTERNAL"}
     
-    handle = BoolProperty(default=True)
+    handle : BoolProperty(default=True)
 
     def execute(self, context):
         props = context.scene.BLStudio
@@ -264,7 +264,7 @@ class LIST_OT_MoveItem(bpy.types.Operator):
     bl_label = "Move an profile in the list"
     bl_options = {"INTERNAL"}
 
-    direction = bpy.props.EnumProperty(
+    direction : bpy.props.EnumProperty(
                 items=(
                     ('UP', 'Up', ""),
                     ('DOWN', 'Down', ""),))
@@ -408,7 +408,7 @@ class ImportProfiles(bpy.types.Operator):
     bl_label = "Import Profiles"
     #bl_options = {"INTERNAL"}
     
-    filepath = bpy.props.StringProperty(default="*.bls", subtype="FILE_PATH")
+    filepath : bpy.props.StringProperty(default="*.bls", subtype="FILE_PATH")
  
     @classmethod
     def poll(self, context):
@@ -471,8 +471,8 @@ class ExportProfiles(bpy.types.Operator):
     bl_label = "Export"
     #bl_options = {"INTERNAL"}
     
-    filepath = bpy.props.StringProperty(default="profile.bls", subtype="FILE_PATH")
-    all = bpy.props.BoolProperty(default=False, name="Export All Profiles")
+    filepath : bpy.props.StringProperty(default="profile.bls", subtype="FILE_PATH")
+    all : bpy.props.BoolProperty(default=False, name="Export All Profiles")
  
     @classmethod
     def poll(self, context):
@@ -539,7 +539,7 @@ class CopyProfileToScene(bpy.types.Operator):
     def get_scenes(self, context):
         return ((s.name, s.name, "Scene name") for i,s in enumerate(bpy.data.scenes))#global_vars["scenes"]
     
-    sceneprop = EnumProperty(items = get_scenes)
+    sceneprop : EnumProperty(items = get_scenes)
     
     @classmethod
     def poll(self, context):
@@ -589,3 +589,16 @@ class CopyProfileMenu(bpy.types.Operator):
 
         wm.popup_menu(draw, title="Copy Profile")
         return {'FINISHED'}
+classes = (
+     ListItem,
+     BLS_UL_List,
+     LIST_OT_NewItem,
+     LIST_OT_DeleteItem,
+     LIST_OT_CopyItem,
+     LIST_OT_MoveItem,
+     ImportProfiles,
+     ExportProfiles,
+     FindMissingTextures,
+     CopyProfileToScene,
+     CopyProfileMenu)
+register, unregister = bpy.utils.register_classes_factory(classes)

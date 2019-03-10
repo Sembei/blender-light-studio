@@ -2,31 +2,34 @@ import bpy
 import os
 from . common import getLightMesh
 
-class BLS_Studio(bpy.types.Panel):
+class BLS_PT_Studio(bpy.types.Panel):
     bl_idname = "bls_studio"
     bl_label = "Studio"
     bl_space_type = "VIEW_3D"
-    bl_region_type = "TOOLS"
+    bl_region_type = "UI"
     bl_category = "Light Studio"
-    
+    # bl_context = "scene"
     @classmethod
     def poll(cls, context):
         return context.area.type == 'VIEW_3D' and context.mode == 'OBJECT'    
     
     def draw(self, context):
         layout = self.layout
+        scene = context.scene
         col = layout.column(align=True)
-        if not context.scene.BLStudio.initialized: col.operator('scene.create_blender_light_studio')
-        if context.scene.BLStudio.initialized: col.operator('scene.delete_blender_light_studio')
-        col.operator('scene.prepare_blender_studio_light')
+        if not context.scene.BLStudio.initialized:
+            col.operator('scene.create_blender_light_studio')
+        if context.scene.BLStudio.initialized:
+            col.operator('scene.delete_blender_light_studio')
+            col.operator('scene.prepare_blender_studio_light')
 
-class BLS_ProfileList(bpy.types.Panel):
+class BLS_PT_ProfileList(bpy.types.Panel):
     bl_idname = "bls_profile_list"
     bl_label = "Profiles"
     bl_space_type = "VIEW_3D"
-    bl_region_type = "TOOLS"
+    bl_region_type = "UI"
     bl_category = "Light Studio"
-    
+    # bl_context = "scene"
     @classmethod
     def poll(cls, context):
         return context.area.type == 'VIEW_3D' and context.mode == 'OBJECT' and context.scene.BLStudio.initialized
@@ -35,7 +38,7 @@ class BLS_ProfileList(bpy.types.Panel):
         layout = self.layout
         scene = context.scene
         
-        props = scene.BLStudio
+        # props = scene.BLStudio
         
         row = layout.row()
         col = row.column()
@@ -50,11 +53,11 @@ class BLS_ProfileList(bpy.types.Panel):
         col.operator('bls_list.move_profile', text='', icon="TRIA_UP").direction = 'UP'
         col.operator('bls_list.move_profile', text='', icon="TRIA_DOWN").direction = 'DOWN'
                 
-class BLS_Lights(bpy.types.Panel):
+class BLS_PT_Lights(bpy.types.Panel):
     bl_idname = "bls_lights"
     bl_label = "Lights"
     bl_space_type = "VIEW_3D"
-    bl_region_type = "TOOLS"
+    bl_region_type = "UI"
     bl_category = "Light Studio"
     
     @classmethod
@@ -68,11 +71,11 @@ class BLS_Lights(bpy.types.Panel):
         row.operator('scene.add_blender_studio_light', text='Add Light')
         row.operator('scene.delete_blender_studio_light', text='Delete Light')
         
-class BLS_Selected(bpy.types.Panel):
+class BLS_PT_Selected(bpy.types.Panel):
     bl_idname = "bls_selected"
     bl_label = "Selected Light"
     bl_space_type = "VIEW_3D"
-    bl_region_type = "TOOLS"
+    bl_region_type = "UI"
     bl_category = "Light Studio"
     
     @classmethod
@@ -80,7 +83,7 @@ class BLS_Selected(bpy.types.Panel):
         return context.area.type == 'VIEW_3D' and context.mode == 'OBJECT'    
     
     def draw(self, context):
-        if context.scene.objects.active and (context.scene.objects.active.name.startswith('BLS_CONTROLLER') or context.scene.objects.active.name.startswith('BLS_LIGHT_MESH')):
+        if bpy.context.view_layer.objects.active and (bpy.context.view_layer.objects.active.name.startswith('BLS_CONTROLLER') or bpy.context.view_layer.objects.active.name.startswith('BLS_LIGHT_MESH')):
             layout = self.layout
             wm = context.window_manager
             
@@ -109,11 +112,11 @@ class BLS_Selected(bpy.types.Panel):
                 col.label("BLS_light material is not valid.")
             col.prop(getLightMesh(), 'location', index=0) #light radius
                 
-class BLS_Visibility(bpy.types.Panel):
+class BLS_PT_Visibility(bpy.types.Panel):
     bl_idname = "bls_visibility"
     bl_label = "Visibility Options"
     bl_space_type = "VIEW_3D"
-    bl_region_type = "TOOLS"
+    bl_region_type = "UI"
     bl_category = "Light Studio"
     
     @classmethod
@@ -126,13 +129,13 @@ class BLS_Visibility(bpy.types.Panel):
         col.operator('object.mute_other_lights')
         col.operator('object.show_all_lights')
         
-class BLS_ProfileImportExport(bpy.types.Panel):
+class BLS_PT_ProfileImportExport(bpy.types.Panel):
     bl_idname = "bls_profile_import_export"
     bl_label = "Import/Export"
     bl_space_type = "VIEW_3D"
-    bl_region_type = "TOOLS"
+    bl_region_type = "UI"
     bl_category = "Light Studio"
-    
+    # bl_context = "scene"
     @classmethod
     def poll(cls, context):
         return context.area.type == 'VIEW_3D' and context.mode == 'OBJECT' and context.scene.BLStudio.initialized
@@ -148,16 +151,16 @@ class BLS_ProfileImportExport(bpy.types.Panel):
         col.operator('bls_list.export_profiles', text="Export All Profiles").all=True
         col.operator('bls_list.import_profiles')
 
-from extensions_framework import util as efutil
+# from extensions_framework import util as efutil
 from . import bl_info
 
-class BLS_Misc(bpy.types.Panel):
+class BLS_PT_Misc(bpy.types.Panel):
     bl_idname = "bls_misc"
     bl_label = "Misc"
     bl_space_type = "VIEW_3D"
-    bl_region_type = "TOOLS"
+    bl_region_type = "UI"
     bl_category = "Light Studio"
-    
+    # bl_context = "scene"
     @classmethod
     def poll(cls, context):
         return context.area.type == 'VIEW_3D' and context.mode == 'OBJECT' #and context.scene.BLStudio.initialized
@@ -173,7 +176,6 @@ class BLS_Misc(bpy.types.Panel):
         
         box = layout.box()
         col = box.column()
-        col.label("Disable in case of problems")
-        col.label("eg. using manipulators")
+        col.label(text="Disable in case of problems")
+        col.label(text="eg. using manipulators")
         col.prop(props, 'selection_overriden')
-        

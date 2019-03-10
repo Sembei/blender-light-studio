@@ -2,19 +2,19 @@ import bpy
 from bpy.props import BoolProperty, IntVectorProperty
 from . common import isFamily, findLightGrp, getLightMesh, family, refreshMaterials
 
-class SelectionOperator(bpy.types.Operator):
+class BLS_OT_SelectionOperator(bpy.types.Operator):
     """ Custom selection """
     bl_idname = "view3d.select_custom" 
     bl_label = "Custom selection"
     bl_options = {"UNDO", "UNDO_GROUPED"}
 
-    extend = BoolProperty(default = False)
-    deselect = BoolProperty(default = False)
-    toggle = BoolProperty(default = False)
-    center = BoolProperty(default = False)
-    enumerate = BoolProperty(default = False)
-    object = BoolProperty(default = False)
-    location = IntVectorProperty(default = (0,0),subtype ='XYZ', size = 2)
+    extend : BoolProperty(default = False)
+    deselect : BoolProperty(default = False)
+    toggle : BoolProperty(default = False)
+    center : BoolProperty(default = False)
+    enumerate : BoolProperty(default = False)
+    object : BoolProperty(default = False)
+    location : IntVectorProperty(default = (0,0),subtype ='XYZ', size = 2)
 
     @classmethod
     def poll(cls, context):
@@ -42,8 +42,7 @@ class SelectionOperator(bpy.types.Operator):
                     
             context.scene.frame_current = context.scene.frame_current
             refreshMaterials()
-        
-        if context.user_preferences.inputs.select_mouse == 'RIGHT':
+        if context.preferences.inputs.select_mouse == 'RIGHT':
             return {'FINISHED'}
         elif self.toggle:
             return {'FINISHED'}
@@ -64,33 +63,34 @@ def add_shortkeys():
         kmi.properties.enumerate = False
         kmi.properties.extend = False
         kmi.properties.deselect = False
-        
     wm = bpy.context.window_manager
+    sm = wm.keyconfigs.active.preferences.select_mouse+"MOUSE"
+    print(sm)
     addon_km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
     
-    addon_kmi = addon_km.keymap_items.new(SelectionOperator.bl_idname, 'SELECTMOUSE', 'PRESS')
+    addon_kmi = addon_km.keymap_items.new(BLS_OT_SelectionOperator.bl_idname, sm, 'PRESS')
     prepKmi(addon_kmi)
     addin_kmis.append(addon_kmi)
     
-    addon_kmi = addon_km.keymap_items.new(SelectionOperator.bl_idname, 'SELECTMOUSE', 'PRESS')
+    addon_kmi = addon_km.keymap_items.new(BLS_OT_SelectionOperator.bl_idname, sm, 'PRESS')
     addon_kmi.shift = True
     prepKmi(addon_kmi)
     addon_kmi.properties.toggle = True
     addin_kmis.append(addon_kmi)
     
-    addon_kmi = addon_km.keymap_items.new(SelectionOperator.bl_idname, 'SELECTMOUSE', 'PRESS')
+    addon_kmi = addon_km.keymap_items.new(BLS_OT_SelectionOperator.bl_idname, sm, 'PRESS')
     addon_kmi.ctrl = True
     prepKmi(addon_kmi)
     addon_kmi.properties.center = True
     addon_kmi.properties.object = True
     addin_kmis.append(addon_kmi)
     
-    addon_kmi = addon_km.keymap_items.new(SelectionOperator.bl_idname, 'SELECTMOUSE', 'PRESS')
+    addon_kmi = addon_km.keymap_items.new(BLS_OT_SelectionOperator.bl_idname, sm, 'PRESS')
     addon_kmi.alt = True
     addon_kmi.properties.enumerate = True
     addin_kmis.append(addon_kmi)
     
-    addon_kmi = addon_km.keymap_items.new(SelectionOperator.bl_idname, 'SELECTMOUSE', 'PRESS')
+    addon_kmi = addon_km.keymap_items.new(BLS_OT_SelectionOperator.bl_idname, sm, 'PRESS')
     addon_kmi.shift = True
     addon_kmi.ctrl = True
     prepKmi(addon_kmi)
@@ -99,7 +99,7 @@ def add_shortkeys():
     addon_kmi.properties.toggle = True
     addin_kmis.append(addon_kmi)
     
-    addon_kmi = addon_km.keymap_items.new(SelectionOperator.bl_idname, 'SELECTMOUSE', 'PRESS')
+    addon_kmi = addon_km.keymap_items.new(BLS_OT_SelectionOperator.bl_idname, sm, 'PRESS')
     addon_kmi.ctrl = True
     addon_kmi.alt = True
     prepKmi(addon_kmi)
@@ -107,7 +107,7 @@ def add_shortkeys():
     addon_kmi.properties.enumerate = True
     addin_kmis.append(addon_kmi)
     
-    addon_kmi = addon_km.keymap_items.new(SelectionOperator.bl_idname, 'SELECTMOUSE', 'PRESS')
+    addon_kmi = addon_km.keymap_items.new(BLS_OT_SelectionOperator.bl_idname, sm, 'PRESS')
     addon_kmi.shift = True
     addon_kmi.alt = True
     prepKmi(addon_kmi)
@@ -115,7 +115,7 @@ def add_shortkeys():
     addon_kmi.properties.toggle = True
     addin_kmis.append(addon_kmi)
     
-    addon_kmi = addon_km.keymap_items.new(SelectionOperator.bl_idname, 'SELECTMOUSE', 'PRESS')
+    addon_kmi = addon_km.keymap_items.new(BLS_OT_SelectionOperator.bl_idname, sm, 'PRESS')
     addon_kmi.shift = True
     addon_kmi.ctrl = True
     addon_kmi.alt = True
