@@ -42,8 +42,7 @@ class BLS_OT_SelectionOperator(bpy.types.Operator):
                     
             context.scene.frame_current = context.scene.frame_current
             refreshMaterials()
-        if True:
-        # if context.preferences.inputs.select_mouse == 'RIGHT':
+        if bpy.context.window_manager.keyconfigs.active.preferences.select_mouse == 'RIGHT':
             return {'FINISHED'}
         elif self.toggle:
             return {'FINISHED'}
@@ -65,9 +64,7 @@ def add_shortkeys():
         kmi.properties.extend = False
         kmi.properties.deselect = False
     wm = bpy.context.window_manager
-    # sm = wm.keyconfigs.active.preferences.select_mouse+"MOUSE"
-    sm = 'LEFTMOUSE'
-    print(sm)
+    sm = wm.keyconfigs.active.preferences.select_mouse+"MOUSE"
     addon_km = wm.keyconfigs.addon.keymaps.new(name='Object Mode', space_type='EMPTY')
     
     addon_kmi = addon_km.keymap_items.new(BLS_OT_SelectionOperator.bl_idname, sm, 'PRESS')
