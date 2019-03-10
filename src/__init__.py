@@ -41,7 +41,6 @@ modules = developer_utils.setup_addon_modules(__path__, __name__, "bpy" in local
 
 # register
 ################################## 
-
 import traceback
 from . import gui
 from . light_operators import Blender_Light_Studio_Properties, update_selection_override
@@ -55,19 +54,17 @@ def config_load():
     # bpy.bls_selection_override_left = efutil.find_config_value(bl_info['name'], 'defaults', 'selection_override_left', False)
 
     update_selection_override()
-
 classes = (DeleteOp.BLS_OT_DeleteOperator, SelectionOp.BLS_OT_SelectionOperator, gui.BLS_PT_Studio, gui.BLS_PT_ProfileList,
             gui.BLS_PT_Lights, gui.BLS_PT_Selected,  gui.BLS_PT_Visibility, gui.BLS_PT_ProfileImportExport, gui.BLS_PT_Misc,
            Blender_Light_Studio_Properties)
-
 def register():
     # try: bpy.utils.register_module(__name__)
     # except: traceback.print_exc()
     from bpy.utils import register_class
     for cls in classes:
         register_class(cls)
-    bpy.types.Scene.BLStudio : bpy.props.PointerProperty(name="Blender Light Studio Properties", type=Blender_Light_Studio_Properties)
-    bpy.types.Object.protected : bpy.props.BoolProperty(name = 'protected', default = False)
+    bpy.types.Scene.BLStudio = bpy.props.PointerProperty(name="Blender Light Studio Properties", type=Blender_Light_Studio_Properties)
+    bpy.types.Object.protected = bpy.props.BoolProperty(name = 'protected', default = False)
     DeleteOp.add_shortkeys()
     config_load() # select operator shortkeys
     light_preview_list.register()

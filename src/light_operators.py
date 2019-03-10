@@ -22,54 +22,54 @@ def update_selection_override():
         else:
             remove_shortkeys()
     return selection_override
-    
+
 class Blender_Light_Studio_Properties(bpy.types.PropertyGroup):
+
     initialized : BoolProperty(default = False)
-            
     def get_light_hidden(self):
         return getLightMesh().hide_render
-    
+
     def set_light_hidden(self, context):
         light = getLightMesh()
         light.hide_render = context
         light.hide = context
         bpy.context.scene.frame_current = bpy.context.scene.frame_current # refresh hack
         refreshMaterials()
-    
+
     light_muted : BoolProperty(name="Mute Light", default=False, set=set_light_hidden, get=get_light_hidden)
-    
+
     def get_selection_overriden(self):
-        if not (hasattr(bpy, 'bls_selection_override_left') and hasattr(bpy, 'bls_selection_override_right')):
-            bpy.bls_selection_override_left = efutil.find_config_value(bl_info['name'], 'defaults', 'selection_override_left', False)
-            bpy.bls_selection_override_right = efutil.find_config_value(bl_info['name'], 'defaults', 'selection_override_right', True)
-        
+        # if not (hasattr(bpy, 'bls_selection_override_left') and hasattr(bpy, 'bls_selection_override_right')):
+        #     bpy.bls_selection_override_left = efutil.find_config_value(bl_info['name'], 'defaults', 'selection_override_left', False)
+        #     bpy.bls_selection_override_right = efutil.find_config_value(bl_info['name'], 'defaults', 'selection_override_right', True)
+
         return update_selection_override()
-    
+
     def set_selection_overriden(self, context):
         from . selectOperator import add_shortkeys, remove_shortkeys
         if context:
             add_shortkeys()
         else:
             remove_shortkeys()
-        
-        if bpy.context.preferences.inputs.select_mouse == 'RIGHT':
-            bpy.bls_selection_override_right = context
-            efutil.write_config_value(bl_info['name'], 'defaults', 'selection_override_right', context)
-        else:
-            bpy.bls_selection_override_left = context
-            efutil.write_config_value(bl_info['name'], 'defaults', 'selection_override_left', context)
-        
-            
+
+        # if bpy.context.preferences.inputs.select_mouse == 'RIGHT':
+        #     bpy.bls_selection_override_right = context
+        #     efutil.write_config_value(bl_info['name'], 'defaults', 'selection_override_right', context)
+        # else:
+        #     bpy.bls_selection_override_left = context
+        #     efutil.write_config_value(bl_info['name'], 'defaults', 'selection_override_left', context)
+
+
     selection_overriden : BoolProperty(
         name="Override Selection",
         default = True,
         set=set_selection_overriden,
         get=get_selection_overriden
     )
-    
-    
+
+
     ''' Profile List '''
-    profile_list : CollectionProperty(type = ListItem)
+    profile_list : CollectionProperty(type=ListItem)
     list_index : IntProperty(name = "Index for profile_list", default = 0, update=update_list_index)
     last_empty : StringProperty(name="Name of last Empty holding profile", default="")
     

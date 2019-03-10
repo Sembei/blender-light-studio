@@ -68,9 +68,9 @@ class BLS_PT_Lights(bpy.types.Panel):
         layout = self.layout
         col = layout.column(align=True)
         row = col.row(align=True)
-        row.operator('scene.add_blender_studio_light', text='Add Light')
-        row.operator('scene.delete_blender_studio_light', text='Delete Light')
-        
+        # row.operator('scene.add_blender_studio_light', text='Add Light')
+        # row.operator('scene.delete_blender_studio_light', text='Delete Light')
+
 class BLS_PT_Selected(bpy.types.Panel):
     bl_idname = "bls_selected"
     bl_label = "Selected Light"
@@ -126,9 +126,9 @@ class BLS_PT_Visibility(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         col = layout.column(align=True)
-        col.operator('object.mute_other_lights')
-        col.operator('object.show_all_lights')
-        
+        # col.operator('object.mute_other_lights')
+        # col.operator('object.show_all_lights')
+
 class BLS_PT_ProfileImportExport(bpy.types.Panel):
     bl_idname = "bls_profile_import_export"
     bl_label = "Import/Export"
