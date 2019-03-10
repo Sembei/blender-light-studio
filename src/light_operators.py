@@ -13,7 +13,7 @@ from . import bl_info
 def update_selection_override():
     from . selectOperator import addon_keymaps
     keylen = bool(len(addon_keymaps))
-    selection_override = True
+    selection_override = False #True
     # selection_override = bpy.bls_selection_override_right if bpy.context.user_preferences.inputs.select_mouse == 'RIGHT' else bpy.bls_selection_override_left
     if keylen != selection_override:
         from . selectOperator import add_shortkeys, remove_shortkeys
@@ -26,6 +26,7 @@ def update_selection_override():
 class Blender_Light_Studio_Properties(bpy.types.PropertyGroup):
 
     initialized : BoolProperty(default = False)
+    
     def get_light_hidden(self):
         return getLightMesh().hide_render
 
@@ -434,7 +435,9 @@ class BSL_ShowAllLights(bpy.types.Operator):
         refreshMaterials()
     
         return {"FINISHED"}
+    
 classes = (
+    #Blender_Light_Studio_Properties, # test...
     Create_OT_BlenderLightStudio,
     DeleteBlenderLightStudio,
     Add_OT_BSLight,
@@ -442,4 +445,5 @@ classes = (
     Prepare_OT_BSLV3D,
     BSL_MuteOtherLights,
     BSL_ShowAllLights)
+
 register, unregister = bpy.utils.register_classes_factory(classes)

@@ -21,6 +21,7 @@ class ListItem(bpy.types.PropertyGroup):
             default="")
             
 class BLS_UL_List(bpy.types.UIList):
+    #
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
         custom_icon = 'OUTLINER_OB_LAMP' if index == context.scene.BLStudio.list_index else 'LAMP'
 

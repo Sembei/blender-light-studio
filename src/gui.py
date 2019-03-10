@@ -17,8 +17,8 @@ class BLS_PT_Studio(bpy.types.Panel):
         layout = self.layout
         scene = context.scene
         col = layout.column(align=True)
-        if not context.scene.BLStudio.initialized:
-            col.operator('scene.create_blender_light_studio')
+        #if not context.scene.BLStudio.initialized:
+        #    col.operator('scene.create_blender_light_studio')
         if context.scene.BLStudio.initialized:
             col.operator('scene.delete_blender_light_studio')
             col.operator('scene.prepare_blender_studio_light')
@@ -62,7 +62,7 @@ class BLS_PT_Lights(bpy.types.Panel):
     
     @classmethod
     def poll(cls, context):
-        return context.area.type == 'VIEW_3D' and context.mode == 'OBJECT' and len(context.scene.BLStudio.profile_list)
+        return context.area.type == 'VIEW_3D' and context.mode == 'OBJECT' #and len(context.scene.BLStudio.profile_list)
     
     def draw(self, context):
         layout = self.layout
@@ -121,7 +121,7 @@ class BLS_PT_Visibility(bpy.types.Panel):
     
     @classmethod
     def poll(cls, context):
-        return context.area.type == 'VIEW_3D' and context.mode == 'OBJECT' and len(context.scene.BLStudio.profile_list)
+        return context.area.type == 'VIEW_3D' and context.mode == 'OBJECT' #and len(context.scene.BLStudio.profile_list)
     
     def draw(self, context):
         layout = self.layout
@@ -172,7 +172,7 @@ class BLS_PT_Misc(bpy.types.Panel):
         props = scene.BLStudio
               
         col = layout.column(align=True)
-        col.operator('bls.find_missing_textures')
+        #col.operator('bls.find_missing_textures')
         
         box = layout.box()
         col = box.column()
