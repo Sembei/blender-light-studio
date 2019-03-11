@@ -17,8 +17,8 @@ class BLS_PT_Studio(bpy.types.Panel):
         layout = self.layout
         scene = context.scene
         col = layout.column(align=True)
-        #if not context.scene.BLStudio.initialized:
-        #    col.operator('scene.create_blender_light_studio')
+        if not context.scene.BLStudio.initialized:
+            col.operator('scene.create_blender_light_studio')
         if context.scene.BLStudio.initialized:
             col.operator('scene.delete_blender_light_studio')
             col.operator('scene.prepare_blender_studio_light')

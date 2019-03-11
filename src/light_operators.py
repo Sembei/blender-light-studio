@@ -53,12 +53,13 @@ class Blender_Light_Studio_Properties(bpy.types.PropertyGroup):
         else:
             remove_shortkeys()
 
-        # if bpy.context.preferences.inputs.select_mouse == 'RIGHT':
-        #     bpy.bls_selection_override_right = context
-        #     efutil.write_config_value(bl_info['name'], 'defaults', 'selection_override_right', context)
-        # else:
-        #     bpy.bls_selection_override_left = context
-        #     efutil.write_config_value(bl_info['name'], 'defaults', 'selection_override_left', context)
+        wm = bpy.context.window_manager
+        if wm.keyconfigs.active.preferences.select_mouse == 'RIGHT':
+            bpy.bls_selection_override_right = context
+            # efutil.write_config_value(bl_info['name'], 'defaults', 'selection_override_right', context)
+        else:
+            bpy.bls_selection_override_left = context
+            # efutil.write_config_value(bl_info['name'], 'defaults', 'selection_override_left', context)
 
 
     selection_overriden : BoolProperty(
@@ -92,12 +93,12 @@ class Create_OT_BlenderLightStudio(bpy.types.Operator):
         bpy.ops.wm.append(filepath=_+'BLS.blend'+_+'Object'+_,
         directory=os.path.join(dir,"BLS.blend"+_+"Object"+_),
         filename="BLENDER_LIGHT_STUDIO",
-        active_layer=False)
+        active_collection=False)
 
         bpy.ops.wm.append(filepath=_+'BLS.blend'+_+'Object'+_,
         directory=os.path.join(dir,"BLS.blend"+_+"Object"+_),
         filename="BLS_PANEL",
-        active_layer=False)
+        active_collection=False)
         
         cpanel = [ob for ob in bpy.context.scene.objects if ob.name.startswith('BLS_PANEL')][0]
         cpanel.parent = [ob for ob in bpy.context.scene.objects if ob.name.startswith('BLENDER_LIGHT_STUDIO')][0]
@@ -436,14 +437,14 @@ class BSL_ShowAllLights(bpy.types.Operator):
     
         return {"FINISHED"}
     
-classes = (
-    #Blender_Light_Studio_Properties, # test...
-    Create_OT_BlenderLightStudio,
-    DeleteBlenderLightStudio,
-    Add_OT_BSLight,
-    Delete_OT_BSLight,
-    Prepare_OT_BSLV3D,
-    BSL_MuteOtherLights,
-    BSL_ShowAllLights)
+classes = (Create_OT_BlenderLightStudio,
+           DeleteBlenderLightStudio,
+           Add_OT_BSLight,
+           Delete_OT_BSLight,
+           Prepare_OT_BSLV3D,
+           BSL_MuteOtherLights,
+           BSL_ShowAllLights)
 
-register, unregister = bpy.utils.register_classes_factory(classes)
+# register, unregister = bpy.utils.register_classes_factory(classes)
+for cls in classes:
+    bpy.utils.register_class(cls)

@@ -67,7 +67,7 @@ class LIST_OT_NewItem(bpy.types.Operator):
         bpy.ops.wm.append(filepath=_+'BLS.blend'+_+'Object'+_,
         directory=os.path.join(dir,"BLS.blend"+_+"Object"+_),
         filename="BLS_PROFILE.000",
-        active_layer=False)
+        active_collection=False)
         
         # after operation
         B = set(bpy.data.objects[:])
@@ -82,14 +82,15 @@ class LIST_OT_NewItem(bpy.types.Operator):
         
         handle = None
         if self.handle:
-            bpy.ops.object.empty_add(type='PLAIN_AXES', radius=1, view_align=False, location=(0, 0, 0), layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False))
+            # bpy.ops.object.empty_add(type='PLAIN_AXES', radius=1, view_align=False, location=(0, 0, 0), layers=(True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False))
+            bpy.ops.object.empty_add(type='PLAIN_AXES', radius=1, view_align=False, location=(0, 0, 0))
             handle = context.active_object
             handle.name = "BLS_HANDLE"
-            handle.empty_draw_type = 'SPHERE'
+            handle.empty_display_type = 'SPHERE'
             handle.parent = profile
             handle.protected = True
             handle.use_fake_user = True
-            handle['last_layers'] = handle.layers[:]
+            # handle['last_layers'] = handle.layers[:] #move to collections
         
         #if len([prof for prof in profile.parent.children if prof.name.startswith('BLS_PROFILE.')]) > 1:
         if len([prof for prof in context.scene.objects if prof.name.startswith('BLS_PROFILE.') and isFamily(prof)]) > 1:
@@ -602,4 +603,6 @@ classes = (
      FindMissingTextures,
      CopyProfileToScene,
      CopyProfileMenu)
-register, unregister = bpy.utils.register_classes_factory(classes)
+# register, unregister = bpy.utils.register_classes_factory(classes)
+for cls in classes:
+    bpy.utils.register_class(cls)
