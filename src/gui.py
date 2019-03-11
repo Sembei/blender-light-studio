@@ -38,16 +38,16 @@ class BLS_PT_ProfileList(bpy.types.Panel):
         layout = self.layout
         scene = context.scene
         
-        # props = scene.BLStudio
+        props = scene.BLStudio
         
         row = layout.row()
         col = row.column()
         col.template_list("BLS_UL_List", "Profile_List", props, "profile_list", props, "list_index", rows=5)
         
         col = row.column(align=True)
-        col.operator('bls_list.new_profile', icon='ZOOMIN', text="")
-        col.operator('bls_list.delete_profile', icon='ZOOMOUT', text="")
-        col.operator('bls_list.copy_profile_menu', icon='GHOST', text="")
+        col.operator('bls_list.new_profile', icon='ZOOM_IN', text="")
+        col.operator('bls_list.delete_profile', icon='ZOOM_OUT', text="")
+        col.operator('bls_list.copy_profile_menu', icon='GHOST_ENABLED', text="")
         
         col.separator()
         col.operator('bls_list.move_profile', text='', icon="TRIA_UP").direction = 'UP'
@@ -68,8 +68,8 @@ class BLS_PT_Lights(bpy.types.Panel):
         layout = self.layout
         col = layout.column(align=True)
         row = col.row(align=True)
-        # row.operator('scene.add_blender_studio_light', text='Add Light')
-        # row.operator('scene.delete_blender_studio_light', text='Delete Light')
+        row.operator('scene.add_blender_studio_light', text='Add Light')
+        row.operator('scene.delete_blender_studio_light', text='Delete Light')
 
 class BLS_PT_Selected(bpy.types.Panel):
     bl_idname = "bls_selected"

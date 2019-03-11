@@ -27,7 +27,7 @@ class BLS_UL_List(bpy.types.UIList):
 
         # Make sure your code supports all 3 layout types
         if self.layout_type in {'DEFAULT', 'COMPACT'}:
-            layout.prop(item, 'name', text='', icon = custom_icon, emboss=False, translate=False)
+            layout.prop(item, 'name', text='', icon = 'OUTLINER_OB_LIGHT', emboss=False, translate=False)
 
         elif self.layout_type in {'GRID'}:
             layout.alignment = 'CENTER'

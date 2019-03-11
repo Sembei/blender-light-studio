@@ -167,25 +167,25 @@ class Add_OT_BSLight(bpy.types.Operator):
         bls = [ob for ob in bpy.context.scene.objects if ob.name.startswith('BLENDER_LIGHT_STUDIO')][0]
     
         # before
-        A = set(bpy.data.groups[:])
+        A = set(bpy.data.collections[:]) #old groups
         A_actions = set(bpy.data.actions[:]) # remove bugged actions (Blender 2.78 bug)
         
         bpy.ops.wm.append(filepath=_+'BLS.blend'+_+'Group'+_,
         directory=os.path.join(dir,"BLS.blend"+_+"Group"+_),
         filename="BLS_Light",
-        active_layer=False)
+        active_collection=False)
         
         if bpy.data.actions.find("BLS_ROT_X") == -1:
             bpy.ops.wm.append(filepath=_+'BLS.blend'+_+'Action'+_,
             directory=os.path.join(dir,"BLS.blend"+_+"Action"+_),
             filename="BLS_ROT_X",
-            active_layer=False)
+            active_collection=False)
 
         if bpy.data.actions.find("BLS_ROT_Z") == -1:
             bpy.ops.wm.append(filepath=_+'BLS.blend'+_+'Action'+_,
             directory=os.path.join(dir,"BLS.blend"+_+"Action"+_),
             filename="BLS_ROT_Z",
-            active_layer=False)
+            active_collection=False)
             
 
         #################
@@ -204,7 +204,7 @@ class Add_OT_BSLight(bpy.types.Operator):
         #################
         
         # after operation
-        B = set(bpy.data.groups[:])
+        B = set(bpy.data.collections[:])
 
         # whats the difference
         new_objects = (A ^ B).pop().objects
@@ -318,7 +318,7 @@ class Delete_OT_BSLight(bpy.types.Operator):
     
     @classmethod
     def poll(cls, context):
-        light = context.scene.objects.active
+        light = context.view_layer.objects.active
         return context.area.type == 'VIEW_3D' and \
                context.mode == 'OBJECT' and \
                context.scene.BLStudio.initialized and \

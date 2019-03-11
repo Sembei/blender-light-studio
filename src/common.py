@@ -36,7 +36,7 @@ def getLightMesh():
     #light_no = lightGrp.name.split('.')[1]
     #return obs[obs.find('BLS_LIGHT_MESH.'+light_no)]
 
-    lg = findLightGrp(bpy.context.scene.objects.active)
+    lg = findLightGrp(bpy.context.view_layer.objects.active)
     lm = [l for l in family(lg) if l.name.startswith("BLS_LIGHT_MESH")]
     return lm[0] if len(lm) else None
 
