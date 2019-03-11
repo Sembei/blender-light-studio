@@ -121,13 +121,13 @@ class BLSLightBrush(bpy.types.Operator):
     bl_label = "Light Brush"
     bl_options = {"UNDO"}
     
-    pressed = BoolProperty(default=False)
-    aux = BoolProperty(default=False) # is aux operator working
-    diffuse_type = BoolProperty(default=False)
+    pressed : BoolProperty(default=False)
+    aux : BoolProperty(default=False) # is aux operator working
+    diffuse_type : BoolProperty(default=False)
     
     @classmethod
     def poll(cls, context):
-        light = context.scene.objects.active
+        light = context.view_layer.objects.active #context.scene.objects.active
         return context.area.type == 'VIEW_3D' and \
                context.mode == 'OBJECT' and \
                context.scene.BLStudio.initialized and \
@@ -225,19 +225,19 @@ class BLS_ResizeLight(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}
     
     #mouse and ui
-    mouseCo = FloatVectorProperty()
-    mouseCoNew = FloatVectorProperty(default=(0,0,0))
-    tmp_mouseCo = FloatVectorProperty()
-    obLoc = FloatVectorProperty()
+    mouseCo : FloatVectorProperty()
+    mouseCoNew : FloatVectorProperty(default=(0,0,0))
+    tmp_mouseCo : FloatVectorProperty()
+    obLoc : FloatVectorProperty()
     
     #values
-    first_value = FloatVectorProperty()
-    tmp_value = FloatVectorProperty()
-    backup_value = FloatVectorProperty()
+    first_value : FloatVectorProperty()
+    tmp_value : FloatVectorProperty()
+    backup_value : FloatVectorProperty()
     
     #operator dependants
-    axis = IntProperty(default=2) # x,y,xy
-    precision = BoolProperty()
+    axis : IntProperty(default=2) # x,y,xy
+    precision : BoolProperty()
     
     @classmethod
     def poll(cls, context):
@@ -348,19 +348,19 @@ class BLS_MoveLight(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}
     
     #mouse and ui
-    mouseCo = FloatVectorProperty()
-    mouseCoNew = FloatVectorProperty(default=(0,0,0))
-    tmp_mouseCo = FloatVectorProperty()
-    obLoc = FloatVectorProperty()
+    mouseCo : FloatVectorProperty()
+    mouseCoNew : FloatVectorProperty(default=(0,0,0))
+    tmp_mouseCo : FloatVectorProperty()
+    obLoc : FloatVectorProperty()
     
     #values
-    first_value = FloatVectorProperty()
-    tmp_value = FloatVectorProperty()
-    back_value = FloatVectorProperty()
+    first_value : FloatVectorProperty()
+    tmp_value : FloatVectorProperty()
+    back_value : FloatVectorProperty()
     
     #operator dependants
-    axis = IntProperty(default=2) # [x,y,xy]
-    precision = BoolProperty()
+    axis : IntProperty(default=2) # [x,y,xy]
+    precision : BoolProperty()
     
     @classmethod
     def poll(cls, context):
@@ -467,18 +467,18 @@ class BLS_RotateLight(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}
     
     #mouse and ui
-    mouseCo = FloatVectorProperty()
-    mouseCoNew = FloatVectorProperty(default=(0,0,0))
-    tmp_mouseCo = FloatVectorProperty()
-    obLoc = FloatVectorProperty()
+    mouseCo : FloatVectorProperty()
+    mouseCoNew : FloatVectorProperty(default=(0,0,0))
+    tmp_mouseCo : FloatVectorProperty()
+    obLoc : FloatVectorProperty()
     
     #values
-    first_value = FloatProperty()
-    tmp_value = FloatProperty()
-    backup_value = FloatProperty()
+    first_value : FloatProperty()
+    tmp_value : FloatProperty()
+    backup_value : FloatProperty()
     
     #operator dependants
-    precision = BoolProperty()
+    precision : BoolProperty()
     
     @classmethod
     def poll(cls, context):
@@ -541,3 +541,23 @@ class BLS_RotateLight(bpy.types.Operator):
         else:
             self.report({'WARNING'}, "Active space must be a View3d")
             return {'CANCELLED'}
+        
+classes = (
+    BLSLightBrush,
+    BLS_ResizeLight,
+    BLS_MoveLight,
+    BLS_RotateLight
+    )
+
+def register():
+    #
+    for cls in classes:
+        bpy.utils.register_class(cls)
+    
+    
+def unregister():
+    #
+    for cls in classes:
+        bpy.utils.unregister_class(cls)
+        
+#EOF

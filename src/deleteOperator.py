@@ -19,7 +19,8 @@ class BLS_OT_DeleteOperator(bpy.types.Operator):
         protected_objects = (ob for ob in context.selected_objects if ob.protected)
         
         for obj in protected_objects:
-            context.scene.objects.active = obj
+            context.view_layer.objects.active = obj
+            #context.scene.objects.active = obj
             if hasattr(obj, 'use_fake_user'):
                 obj.use_fake_user = False
             ret = bpy.ops.scene.delete_blender_studio_light()
@@ -61,3 +62,12 @@ def remove_shortkeys():
         wm.keyconfigs.addon.keymaps.remove(km)
         
     addon_keymaps.clear()
+    
+def register():
+    #
+    bpy.utils.register_class(BLS_OT_DeleteOperator)
+    
+    
+def unregister():
+    #
+    bpy.utils.unregister_class(BLS_OT_DeleteOperator)

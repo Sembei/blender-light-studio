@@ -88,12 +88,12 @@ class BLS_PT_Selected(bpy.types.Panel):
             wm = context.window_manager
             
             col = layout.column(align=True)
-            col.operator('bls.light_brush', text="3D Edit", icon='CURSOR')
+            col.operator('bls.light_brush', text="3D Edit", icon='NONE') #'CURSOR')
             
             box = layout.box()
             col = box.column()
             col.template_icon_view(wm, "bls_tex_previews", show_labels=True)
-            col.label(os.path.splitext(wm.bls_tex_previews)[0])
+            col.label(text=os.path.splitext(wm.bls_tex_previews)[0])
             
             col = layout.column(align=True)
             col.prop(context.scene.BLStudio, 'light_muted')
@@ -104,12 +104,12 @@ class BLS_PT_Selected(bpy.types.Panel):
                 bls_inputs = getLightMesh().active_material.node_tree.nodes["Group"].inputs
                 for input in bls_inputs[1:]:
                     if input.type == "RGBA":
-                        layout.prop(input, 'default_value', input.name)
+                        layout.prop(input, 'default_value', text=input.name)
                         col = layout.column(align=True)
                     else:
-                        col.prop(input, 'default_value', input.name)
+                        col.prop(input, 'default_value', text=input.name)
             except:
-                col.label("BLS_light material is not valid.")
+                col.label(text="BLS_light material is not valid.")
             col.prop(getLightMesh(), 'location', index=0) #light radius
                 
 class BLS_PT_Visibility(bpy.types.Panel):
@@ -179,3 +179,25 @@ class BLS_PT_Misc(bpy.types.Panel):
         col.label(text="Disable in case of problems")
         col.label(text="eg. using manipulators")
         col.prop(props, 'selection_overriden')
+
+classes = (
+    BLS_PT_Studio,
+    BLS_PT_ProfileList,
+    BLS_PT_Lights,
+    BLS_PT_Selected,
+    BLS_PT_Visibility,
+    BLS_PT_ProfileImportExport,
+    BLS_PT_Misc
+)
+
+
+def register():
+    #
+    for cls in classes:
+        bpy.utils.register_class(cls)
+    
+    
+def unregister():
+    #
+    for cls in classes:
+        bpy.utils.unregister_class(cls)

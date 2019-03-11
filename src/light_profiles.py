@@ -6,6 +6,7 @@ from itertools import chain
 
 _ = os.sep
 
+# esta es una dependencia cruzada: necesita que BLStudio este registrado, pero a la vez, esto se 'registra' cuando BLStudio...
 class ListItem(bpy.types.PropertyGroup):
     """ Group of properties representing an item in the list """
     def update_name(self, context):
@@ -19,6 +20,7 @@ class ListItem(bpy.types.PropertyGroup):
             name="Name of Empty holding profile",
             description="",
             default="")
+    
             
 class BLS_UL_List(bpy.types.UIList):
     #
@@ -268,7 +270,9 @@ class LIST_OT_MoveItem(bpy.types.Operator):
     direction : bpy.props.EnumProperty(
                 items=(
                     ('UP', 'Up', ""),
-                    ('DOWN', 'Down', ""),))
+                    ('DOWN', 'Down', ""),
+                )
+            )
 
     @classmethod
     def poll(self, context):
@@ -305,6 +309,7 @@ class LIST_OT_MoveItem(bpy.types.Operator):
             list.move(neighbor, index)
         else:
             return{'CANCELLED'}
+            
         self.move_index(context)
 
         return{'FINISHED'}
@@ -590,6 +595,7 @@ class CopyProfileMenu(bpy.types.Operator):
 
         wm.popup_menu(draw, title="Copy Profile")
         return {'FINISHED'}
+    
 classes = (
      ListItem,
      BLS_UL_List,
@@ -602,4 +608,17 @@ classes = (
      FindMissingTextures,
      CopyProfileToScene,
      CopyProfileMenu)
-register, unregister = bpy.utils.register_classes_factory(classes)
+
+def register():
+    #
+    for cls in classes:
+        bpy.utils.register_class(cls)
+    
+    
+def unregister():
+    #
+    for cls in classes:
+        bpy.utils.unregister_class(cls)
+
+
+#EOF

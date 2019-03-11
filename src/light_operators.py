@@ -33,7 +33,8 @@ class Blender_Light_Studio_Properties(bpy.types.PropertyGroup):
     def set_light_hidden(self, context):
         light = getLightMesh()
         light.hide_render = context
-        light.hide = context
+        #light.hide = context
+        light.hide_viewport = context
         bpy.context.scene.frame_current = bpy.context.scene.frame_current # refresh hack
         refreshMaterials()
 
@@ -70,9 +71,18 @@ class Blender_Light_Studio_Properties(bpy.types.PropertyGroup):
 
 
     ''' Profile List '''
-    profile_list : CollectionProperty(type=ListItem)
+    #profile_list : CollectionProperty(name="", type=ListItem)
     list_index : IntProperty(name = "Index for profile_list", default = 0, update=update_list_index)
     last_empty : StringProperty(name="Name of last Empty holding profile", default="")
+    
+    @classmethod
+    def register(cls):
+        profile_list : CollectionProperty(name="", type=cls) #ListItem)
+        bpy.types.Scene.BLStudio = bpy.props.PointerProperty(type=cls, name="Blender Light Studio Properties") #Blender_Light_Studio_Properties)
+        
+    @classmethod
+    def unregister(cls):
+        del bpy.types.Scene.BLStudio
     
 
 class Create_OT_BlenderLightStudio(bpy.types.Operator):
@@ -437,7 +447,7 @@ class BSL_ShowAllLights(bpy.types.Operator):
         return {"FINISHED"}
     
 classes = (
-    #Blender_Light_Studio_Properties, # test...
+    Blender_Light_Studio_Properties, # test...
     Create_OT_BlenderLightStudio,
     DeleteBlenderLightStudio,
     Add_OT_BSLight,

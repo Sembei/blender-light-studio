@@ -43,42 +43,57 @@ modules = developer_utils.setup_addon_modules(__path__, __name__, "bpy" in local
 ################################## 
 import traceback
 from . import gui
-from . light_operators import Blender_Light_Studio_Properties, update_selection_override
-from . import deleteOperator as DeleteOp
-from . import selectOperator as SelectionOp
+from . import light_operators
+from . import light_profiles
 from . import light_preview_list
+from . import light_brush
+from . import selectOperator
+from . import deleteOperator
+
+
 ##Prefs.select_mouse
 def config_load():
     # from extensions_framework import util as efutil
     # bpy.bls_selection_override_right = efutil.find_config_value(bl_info['name'], 'defaults', 'selection_override_right', True)
     # bpy.bls_selection_override_left = efutil.find_config_value(bl_info['name'], 'defaults', 'selection_override_left', False)
 
-    update_selection_override()
-classes = (DeleteOp.BLS_OT_DeleteOperator, SelectionOp.BLS_OT_SelectionOperator, gui.BLS_PT_Studio, gui.BLS_PT_ProfileList,
-            gui.BLS_PT_Lights, gui.BLS_PT_Selected,  gui.BLS_PT_Visibility, gui.BLS_PT_ProfileImportExport, gui.BLS_PT_Misc,
-           Blender_Light_Studio_Properties)
+    light_operators.update_selection_override()
+    
+#
+
 def register():
-    # try: bpy.utils.register_module(__name__)
-    # except: traceback.print_exc()
-    from bpy.utils import register_class
-    for cls in classes:
-        register_class(cls)
-    bpy.types.Scene.BLStudio = bpy.props.PointerProperty(name="Blender Light Studio Properties", type=Blender_Light_Studio_Properties)
-    bpy.types.Object.protected = bpy.props.BoolProperty(name = 'protected', default = False)
-    DeleteOp.add_shortkeys()
-    config_load() # select operator shortkeys
+    # 
+    gui.register()
+    light_operators.register()
+    light_profiles.register()
     light_preview_list.register()
+    light_brush.register()
+    selectOperator.register()
+    deleteOperator.register()
+    
+    #bpy.types.Scene.BLStudio = bpy.props.PointerProperty(name="Blender Light Studio Properties", type=Blender_Light_Studio_Properties)
+    bpy.types.Object.protected = bpy.props.BoolProperty(name = 'protected', default = False)
+    
+    deleteOperator.add_shortkeys()
+    config_load() # select operator shortkeys
     
     
     print("Registered {} with {} modules".format(bl_info["name"], len(modules)))
     
 
 def unregister():
-    SelectionOp.remove_shortkeys()
-    DeleteOp.remove_shortkeys()
-    # try: bpy.utils.unregister_module(__name__)
-    # except: traceback.print_exc()
-    from bpy.utils import unregister_class
-    for cls in reversed(classes):
-        unregister_class(cls)
+    selectOperator.remove_shortkeys()
+    deleteOperator.remove_shortkeys()
+    
+    #
+    gui.unregister()
+    light_profiles.unregister()
+    light_operators.unregister()
+    light_preview_list.unregister()
+    light_brush.unregister()
+    selectOperator.unregister()
+    deleteOperator.unregister()
+    
     print("Unregistered {}".format(bl_info["name"]))
+    
+#EOF

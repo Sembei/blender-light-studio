@@ -135,3 +135,13 @@ def remove_shortkeys():
             
     addon_keymaps.clear()
     addin_kmis.clear()
+    
+def register():
+    #
+    bpy.utils.register_class(BLS_OT_SelectionOperator)
+
+def unregister():
+    #
+    bpy.utils.register_class(BLS_OT_SelectionOperator)
+    
+#EOF
