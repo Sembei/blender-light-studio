@@ -34,22 +34,22 @@ def raycast(context, event, diff):
             if obj.type == 'MESH':
                 yield (obj, obj.matrix_world.copy())
 
-            if obj.dupli_type != 'NONE':
-                obj.dupli_list_create(scene)
+            if obj.instance_type != 'NONE':
+                obj.instance_list_create(scene)
                 for dob in obj.dupli_list:
                     obj_dupli = dob.object
                     if obj_dupli.type == 'MESH':
                         yield (obj_dupli, dob.matrix.copy())
 
-            obj.dupli_list_clear()
+            # obj.dupli_list_clear() TODO:o more dupli lists?
 
     def obj_ray_cast(obj, matrix):
         """Wrapper for ray casting that moves the ray into object space"""
 
         # get the ray relative to the object
         matrix_inv = matrix.inverted()
-        ray_origin_obj = matrix_inv * ray_origin
-        ray_target_obj = matrix_inv * ray_target
+        ray_origin_obj = matrix_inv @ ray_origin
+        ray_target_obj = matrix_inv @ ray_target
         ray_direction_obj = ray_target_obj - ray_origin_obj
 
         # cast the ray
@@ -70,7 +70,7 @@ def raycast(context, event, diff):
         if obj.type == 'MESH':
             hit, hit_normal, face_index = obj_ray_cast(obj, matrix)
             if hit is not None:
-                hit_world = matrix * hit
+                hit_world = matrix @ hit
                 length_squared = (hit_world - ray_origin).length_squared
                 if best_obj is None or length_squared < best_length_squared:
                     best_length_squared = length_squared
@@ -85,7 +85,7 @@ def raycast(context, event, diff):
     # convert normal from local space to global
     matrix = best_obj.matrix_world
     matrix_new = matrix.to_3x3().inverted().transposed()
-    normal = matrix_new * normal
+    normal = matrix_new @ normal
     normal.normalize()
     
     #####
@@ -127,7 +127,7 @@ class BLSLightBrush(bpy.types.Operator):
     
     @classmethod
     def poll(cls, context):
-        light = context.scene.objects.active
+        light = context.view_layer.objects.active
         return context.area.type == 'VIEW_3D' and \
                context.mode == 'OBJECT' and \
                context.scene.BLStudio.initialized and \
@@ -541,3 +541,12 @@ class BLS_RotateLight(bpy.types.Operator):
         else:
             self.report({'WARNING'}, "Active space must be a View3d")
             return {'CANCELLED'}
+classes = (BLSLightBrush, BLS_ResizeLight, BLS_MoveLight, BLS_RotateLight)
+
+def register():
+    for cls in classes:
+        bpy.utils.register_class(cls)
+
+def unregister():
+    for cls in classes:
+        bpy.utils.unregister_class(cls)

@@ -47,6 +47,7 @@ from . light_operators import Blender_Light_Studio_Properties, update_selection_
 from . import deleteOperator as DeleteOp
 from . import selectOperator as SelectionOp
 from . import light_preview_list
+from . import light_brush
 ##Prefs.select_mouse
 def config_load():
     # from extensions_framework import util as efutil
@@ -68,7 +69,7 @@ def register():
     DeleteOp.add_shortkeys()
     config_load() # select operator shortkeys
     light_preview_list.register()
-    
+    light_brush.register()
     
     print("Registered {} with {} modules".format(bl_info["name"], len(modules)))
     
@@ -81,4 +82,5 @@ def unregister():
     from bpy.utils import unregister_class
     for cls in reversed(classes):
         unregister_class(cls)
+    light_brush.unregister()
     print("Unregistered {}".format(bl_info["name"]))

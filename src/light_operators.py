@@ -170,8 +170,8 @@ class Add_OT_BSLight(bpy.types.Operator):
         A = set(bpy.data.collections[:]) #old groups
         A_actions = set(bpy.data.actions[:]) # remove bugged actions (Blender 2.78 bug)
         
-        bpy.ops.wm.append(filepath=_+'BLS.blend'+_+'Group'+_,
-        directory=os.path.join(dir,"BLS.blend"+_+"Group"+_),
+        bpy.ops.wm.append(filepath=_+'BLS.blend'+_+'Collection'+_,
+        directory=os.path.join(dir,"BLS.blend"+_+"Collection"+_),
         filename="BLS_Light",
         active_collection=False)
         
@@ -214,16 +214,16 @@ class Add_OT_BSLight(bpy.types.Operator):
             ob.use_fake_user = True
         
         lightGrp = [l for l in new_objects if l.name.startswith('BLS_LIGHT_GRP')][0]
-        profile = [ob for ob in bpy.context.scene.objects if ob and ob.name.startswith('BLS_PROFILE') and isFamily(ob)][0]
+        profile = [ob for ob in bpy.context.view_layer.objects if ob and ob.name.startswith('BLS_PROFILE') and isFamily(ob)][0]
         handle = [ob for ob in profile.children if ob.name.startswith('BLS_HANDLE')][0]
         lightGrp.parent = profile
         
         bpy.ops.object.select_all(action='DESELECT')
         light = [p for p in new_objects if p.name.startswith('BLS_LIGHT_MESH')][0]
-        light.select = True
+        # light.select = True
         panel = [p for p in new_objects if p.name.startswith('BLS_CONTROLLER')][0]
-        panel.select = True
-        context.scene.objects.active = panel
+        # panel.select = True
+        context.view_layer.objects.active = panel
         
         ##### Blender 2.78 workaround. Constraints cannot be appended
         c = light.constraints.new('COPY_ROTATION')
@@ -328,10 +328,10 @@ class Delete_OT_BSLight(bpy.types.Operator):
 
     def execute(self, context):
         scene = context.scene
-        oldlaysArea = context.area.spaces[0].layers[:]
-        oldlaysScene = context.scene.layers[:]
-        context.area.spaces[0].layers = [True]*20
-        context.scene.layers = [True]*20
+        oldlaysArea = context.area.spaces[0].collections[:]
+        oldlaysScene = context.scene.collections[:]
+        context.area.spaces[0].collections = True
+        context.scene.collections = True
         
         light = bpy.context.scene.objects.active
         
