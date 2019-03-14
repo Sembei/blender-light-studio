@@ -88,7 +88,7 @@ class BLS_PT_Selected(bpy.types.Panel):
             wm = context.window_manager
             
             col = layout.column(align=True)
-            col.operator('bls.light_brush', text="3D Edit", icon='NONE') #'CURSOR')
+            col.operator('bls.light_brush', text="3D Edit", icon='PIVOT_CURSOR')
             
             box = layout.box()
             col = box.column()

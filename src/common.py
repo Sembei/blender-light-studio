@@ -41,7 +41,7 @@ def getLightMesh():
     return lm[0] if len(lm) else None
 
 def getLightController():
-    obs = bpy.context.scene.objects
+    obs = bpy.context.view_layer.objects
     lightGrp = obs.active
     light_no = lightGrp.name.split('.')[1]
     return obs[obs.find('BLS_CONTROLLER.'+light_no)]

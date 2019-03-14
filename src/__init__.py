@@ -48,7 +48,6 @@ from . import deleteOperator as DeleteOp
 from . import selectOperator as SelectionOp
 from . import light_preview_list
 from . import light_brush
-
 ##Prefs.select_mouse
 def config_load():
     # from extensions_framework import util as efutil
@@ -73,7 +72,6 @@ def register():
     config_load() # select operator shortkeys
     light_preview_list.register()
     light_brush.register()
-    
     
     print("Registered {} with {} modules".format(bl_info["name"], len(modules)))
     
