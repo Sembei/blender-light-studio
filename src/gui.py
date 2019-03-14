@@ -88,12 +88,12 @@ class BLS_PT_Selected(bpy.types.Panel):
             wm = context.window_manager
             
             col = layout.column(align=True)
-            col.operator('bls.light_brush', text="3D Edit", icon='CURSOR')
+            col.operator('bls.light_brush', text="3D Edit", icon='NONE') #'CURSOR')
             
             box = layout.box()
             col = box.column()
             col.template_icon_view(wm, "bls_tex_previews", show_labels=True)
-            col.label(os.path.splitext(wm.bls_tex_previews)[0])
+            col.label(text=os.path.splitext(wm.bls_tex_previews)[0])
             
             col = layout.column(align=True)
             col.prop(context.scene.BLStudio, 'light_muted')
@@ -109,7 +109,7 @@ class BLS_PT_Selected(bpy.types.Panel):
                     else:
                         col.prop(input, 'default_value', input.name)
             except:
-                col.label("BLS_light material is not valid.")
+                col.label(text="BLS_light material is not valid.")
             col.prop(getLightMesh(), 'location', index=0) #light radius
                 
 class BLS_PT_Visibility(bpy.types.Panel):

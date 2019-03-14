@@ -170,8 +170,8 @@ class Add_OT_BSLight(bpy.types.Operator):
         A = set(bpy.data.collections[:]) #old groups
         A_actions = set(bpy.data.actions[:]) # remove bugged actions (Blender 2.78 bug)
         
-        bpy.ops.wm.append(filepath=_+'BLS.blend'+_+'Group'+_,
-        directory=os.path.join(dir,"BLS.blend"+_+"Group"+_),
+        bpy.ops.wm.append(filepath=_+'BLS.blend'+_+'Collection'+_, # 'Group'+_,
+        directory=os.path.join(dir,"BLS.blend"+_+"Collection"+_), # "Group"+_),
         filename="BLS_Light",
         active_collection=False)
         
@@ -220,10 +220,10 @@ class Add_OT_BSLight(bpy.types.Operator):
         
         bpy.ops.object.select_all(action='DESELECT')
         light = [p for p in new_objects if p.name.startswith('BLS_LIGHT_MESH')][0]
-        light.select = True
+        #light.select = True
         panel = [p for p in new_objects if p.name.startswith('BLS_CONTROLLER')][0]
-        panel.select = True
-        context.scene.objects.active = panel
+        #panel.select = True
+        context.view_layer.objects.active = panel
         
         ##### Blender 2.78 workaround. Constraints cannot be appended
         c = light.constraints.new('COPY_ROTATION')

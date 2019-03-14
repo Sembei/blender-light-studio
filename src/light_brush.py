@@ -121,13 +121,13 @@ class BLSLightBrush(bpy.types.Operator):
     bl_label = "Light Brush"
     bl_options = {"UNDO"}
     
-    pressed = BoolProperty(default=False)
-    aux = BoolProperty(default=False) # is aux operator working
-    diffuse_type = BoolProperty(default=False)
+    pressed : BoolProperty(default=False)
+    aux : BoolProperty(default=False) # is aux operator working
+    diffuse_type : BoolProperty(default=False)
     
     @classmethod
     def poll(cls, context):
-        light = context.scene.objects.active
+        light = context.view_layer.objects.active
         return context.area.type == 'VIEW_3D' and \
                context.mode == 'OBJECT' and \
                context.scene.BLStudio.initialized and \
@@ -187,6 +187,7 @@ class BLSLightBrush(bpy.types.Operator):
 ########################################## Modal AUX Operators ##########################################
 from bpy_extras.view3d_utils import location_3d_to_region_2d as loc3d2d
 import bgl
+
 def draw_callback_px(self, context): 
     region = context.region  
     rv3d = context.space_data.region_3d
@@ -218,6 +219,7 @@ def draw_callback_px(self, context):
 
 obj_ref = {}
 obj_ref['resize'] = None
+
 class BLS_ResizeLight(bpy.types.Operator):
     """Resize BLS Light Mesh"""
     bl_idname = "bls.resize_light"
@@ -225,19 +227,19 @@ class BLS_ResizeLight(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}
     
     #mouse and ui
-    mouseCo = FloatVectorProperty()
-    mouseCoNew = FloatVectorProperty(default=(0,0,0))
-    tmp_mouseCo = FloatVectorProperty()
-    obLoc = FloatVectorProperty()
+    mouseCo : FloatVectorProperty()
+    mouseCoNew : FloatVectorProperty(default=(0,0,0))
+    tmp_mouseCo : FloatVectorProperty()
+    obLoc : FloatVectorProperty()
     
     #values
-    first_value = FloatVectorProperty()
-    tmp_value = FloatVectorProperty()
-    backup_value = FloatVectorProperty()
+    first_value : FloatVectorProperty()
+    tmp_value : FloatVectorProperty()
+    backup_value : FloatVectorProperty()
     
     #operator dependants
-    axis = IntProperty(default=2) # x,y,xy
-    precision = BoolProperty()
+    axis : IntProperty(default=2) # x,y,xy
+    precision : BoolProperty()
     
     @classmethod
     def poll(cls, context):
@@ -308,11 +310,13 @@ class BLS_ResizeLight(bpy.types.Operator):
                  tmp = self.mouseCo
                  self.mouseCo = self.mouseCoNew
                  self.mouseCoNew = tmp
-        elif event.type == 'LEFTMOUSE':
+                 
+        elif event.type == 'LEFTMOUSE':            
             bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
             context.area.header_text_set()
             context.scene.objects.active = context.scene.objects.active
             return {'FINISHED'}
+        
         elif event.type in {'RIGHTMOUSE', 'ESC'}:
             obj_ref['resize'].scale = self.backup_value
             bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
@@ -341,6 +345,7 @@ class BLS_ResizeLight(bpy.types.Operator):
             return {'CANCELLED'}
         
 obj_ref['move'] = None
+
 class BLS_MoveLight(bpy.types.Operator):
     """Move BLS Light Mesh"""
     bl_idname = "bls.move_light"
@@ -348,19 +353,19 @@ class BLS_MoveLight(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}
     
     #mouse and ui
-    mouseCo = FloatVectorProperty()
-    mouseCoNew = FloatVectorProperty(default=(0,0,0))
-    tmp_mouseCo = FloatVectorProperty()
-    obLoc = FloatVectorProperty()
+    mouseCo : FloatVectorProperty()
+    mouseCoNew : FloatVectorProperty(default=(0,0,0))
+    tmp_mouseCo : FloatVectorProperty()
+    obLoc : FloatVectorProperty()
     
     #values
-    first_value = FloatVectorProperty()
-    tmp_value = FloatVectorProperty()
-    back_value = FloatVectorProperty()
+    first_value : FloatVectorProperty()
+    tmp_value : FloatVectorProperty()
+    back_value : FloatVectorProperty()
     
     #operator dependants
-    axis = IntProperty(default=2) # [x,y,xy]
-    precision = BoolProperty()
+    axis : IntProperty(default=2) # [x,y,xy]
+    precision : BoolProperty()
     
     @classmethod
     def poll(cls, context):
@@ -391,10 +396,12 @@ class BLS_MoveLight(bpy.types.Operator):
             if self.axis == 2: #xy
                 context.area.header_text_set("Move Dx: %.4f Dy: %.4f" % (dx, dy))
                 last_loc[2] = self.backup_value[2]
+                
             elif self.axis == 1: #y
                 last_loc[0] = self.first_value[0]
                 last_loc[2] = self.backup_value[2]
                 context.area.header_text_set("Move: %.4f along local Y" % dy)
+                
             elif self.axis == 0: #x
                 last_loc[1] = self.first_value[1]
                 last_loc[2] = self.backup_value[2]
@@ -405,10 +412,13 @@ class BLS_MoveLight(bpy.types.Operator):
             self.tmp_value = last_loc
             
             return {'RUNNING_MODAL'}
+        
         elif event.type == 'X' and event.value == 'PRESS':
             self.axis = 0 if self.axis != 0 else 2
+            
         elif event.type == 'Y' and event.value == 'PRESS':
             self.axis = 1 if self.axis != 1 else 2
+            
         elif event.type in {'LEFT_SHIFT', 'RIGHT_SHIFT'}:
              if event.value == 'PRESS':
                  self.precision = True
@@ -420,6 +430,7 @@ class BLS_MoveLight(bpy.types.Operator):
                  tmp = self.mouseCo
                  self.mouseCo = self.mouseCoNew
                  self.mouseCoNew = tmp
+                 
              elif event.value == 'RELEASE':
                  self.precision = False
                  
@@ -430,9 +441,11 @@ class BLS_MoveLight(bpy.types.Operator):
                  tmp = self.mouseCo
                  self.mouseCo = self.mouseCoNew
                  self.mouseCoNew = tmp
+                 
         elif event.type == 'LEFTMOUSE':
             context.area.header_text_set()
             return {'FINISHED'}
+        
         elif event.type in {'RIGHTMOUSE', 'ESC'}:
             obj_ref['move'].location = self.backup_value
             context.area.header_text_set()
@@ -460,6 +473,7 @@ class BLS_MoveLight(bpy.types.Operator):
             return {'CANCELLED'}
         
 obj_ref['rotate'] = None
+
 class BLS_RotateLight(bpy.types.Operator):
     """Rotate BLS Light Mesh"""
     bl_idname = "bls.rotate_light"
@@ -467,18 +481,18 @@ class BLS_RotateLight(bpy.types.Operator):
     bl_options = {"REGISTER", "UNDO"}
     
     #mouse and ui
-    mouseCo = FloatVectorProperty()
-    mouseCoNew = FloatVectorProperty(default=(0,0,0))
-    tmp_mouseCo = FloatVectorProperty()
-    obLoc = FloatVectorProperty()
+    mouseCo : FloatVectorProperty()
+    mouseCoNew : FloatVectorProperty(default=(0,0,0))
+    tmp_mouseCo : FloatVectorProperty()
+    obLoc : FloatVectorProperty()
     
     #values
-    first_value = FloatProperty()
-    tmp_value = FloatProperty()
-    backup_value = FloatProperty()
+    first_value : FloatProperty()
+    tmp_value : FloatProperty()
+    backup_value : FloatProperty()
     
     #operator dependants
-    precision = BoolProperty()
+    precision : BoolProperty()
     
     @classmethod
     def poll(cls, context):
@@ -510,11 +524,13 @@ class BLS_RotateLight(bpy.types.Operator):
             self.tmp_value = new_angle
             
             return {'RUNNING_MODAL'}
+        
         elif event.type == 'LEFTMOUSE':
             bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
             context.area.header_text_set()
             context.scene.objects.active = context.scene.objects.active
             return {'FINISHED'}
+        
         elif event.type in {'RIGHTMOUSE', 'ESC'}:
             obj_ref['rotate'].rotation_euler[2] = self.backup_value
             bpy.types.SpaceView3D.draw_handler_remove(self._handle, 'WINDOW')
@@ -541,3 +557,22 @@ class BLS_RotateLight(bpy.types.Operator):
         else:
             self.report({'WARNING'}, "Active space must be a View3d")
             return {'CANCELLED'}
+        
+        
+classes = (
+    BLSLightBrush,
+    BLS_ResizeLight,
+    BLS_MoveLight,
+    BLS_RotateLight
+    )
+
+def register():
+    #
+    for cls in classes:
+        bpy.utils.register_class(cls)
+    
+    
+def unregister():
+    #
+    for cls in classes:
+        bpy.utils.unregister_class(cls)
