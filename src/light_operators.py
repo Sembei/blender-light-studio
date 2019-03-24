@@ -396,20 +396,20 @@ class BSL_MuteOtherLights(bpy.types.Operator):
     @classmethod
     def poll(cls, context):
         return context.area.type == 'VIEW_3D' and context.mode == 'OBJECT' and context.scene.BLStudio.initialized \
-            and context.scene.objects.active and (context.scene.objects.active.name.startswith('BLS_CONTROLLER') or context.scene.objects.active.name.startswith('BLS_LIGHT_MESH'))
+            and context.view_layer.objects.active and (context.view_layer.objects.active.name.startswith('BLS_CONTROLLER') or context.view_layer.objects.active.name.startswith('BLS_LIGHT_MESH'))
     
     def execute(self, context):
-        obs = context.scene.objects
+        obs = context.view_layer.objects
         lightGrp = obs.active
         light_no = lightGrp.name.split('.')[1]
     
         for light in (ob for ob in obs if ob.name.startswith('BLS_LIGHT_MESH') and isFamily(ob)):
             if light.name[-3:] == light_no:
                 light.hide_render = False
-                light.hide = False
+                light.hide_viewport = False
             else:
                 light.hide_render = True
-                light.hide = True
+                light.hide_viewport = True
                 
         context.scene.frame_current = context.scene.frame_current # refresh hack
         refreshMaterials()
@@ -427,10 +427,10 @@ class BSL_ShowAllLights(bpy.types.Operator):
         return context.area.type == 'VIEW_3D' and context.mode == 'OBJECT' and context.scene.BLStudio.initialized
     
     def execute(self, context):
-        obs = context.scene.objects
+        obs = context.view_layer.objects
         for light in (ob for ob in obs if ob.name.startswith('BLS_LIGHT_MESH') and isFamily(ob)):
             light.hide_render = False
-            light.hide = False
+            light.hide_viewport = False
                 
         context.scene.frame_current = context.scene.frame_current # refresh hack
         refreshMaterials()

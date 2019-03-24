@@ -59,7 +59,7 @@ def splitV3DtoBLS(context):
     # ctrlPanel.spaces[0].show_relationship_lines
     # ctrlPanel.spaces[0].viewport_shade = 'MATERIAL'
 
-    ctrlPanel.spaces[0].shading.type= 'SOLID'
+    ctrlPanel.spaces[0].shading.type= 'MATERIAL'
     override = {'window': window, 'screen': screen, 'area': ctrlPanel, 'region': ctrlPanel.regions[2], 'scene': context.scene}
     if ctrlPanel.spaces[0].region_3d.is_perspective: bpy.ops.view3d.view_persportho(override)
     bpy.ops.view3d.view_axis(override, type = 'TOP')

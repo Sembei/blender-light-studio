@@ -148,7 +148,7 @@ class BLSLightBrush(bpy.types.Operator):
             # allow navigation
             return {'PASS_THROUGH'}
         elif event.type in {'RIGHTMOUSE', 'ESC', 'RET', 'NUMPAD_ENTER'}:
-            context.area.header_text_set()
+            context.area.header_text_set(text="")
             return {'FINISHED'}
         elif event.type == 'LEFTMOUSE':
             if event.value == 'PRESS':

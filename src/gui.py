@@ -126,8 +126,8 @@ class BLS_PT_Visibility(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         col = layout.column(align=True)
-        # col.operator('object.mute_other_lights')
-        # col.operator('object.show_all_lights')
+        col.operator('object.mute_other_lights')
+        col.operator('object.show_all_lights')
 
 class BLS_PT_ProfileImportExport(bpy.types.Panel):
     bl_idname = "bls_profile_import_export"
